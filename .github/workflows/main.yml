@@ -1,1 +1,56 @@
+name: Build and Deploy Docker Image
 
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install Flask prometheus_client
+
+    - name: Lint and Test
+      run: |
+        # Add your linting and testing commands here
+        # e.g., flake8, pytest, etc.
+        echo "Linting and testing..."
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.samiabbas09 }}
+        password: ${{ secrets.Samireza09 }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: ${{ secrets.samiabbas09 }}/myflaskapp:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Deploy to Server
+      # Add steps to deploy your Docker image to your server
+      # This could be SSH commands, Kubernetes deployment, etc.
+      run: |
+        echo "Deploying..."
