@@ -43,26 +43,4 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/myflaskapp:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Add SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Deploy to Server
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        run: |
-          ssh -o StrictHostKeyChecking=no user@localhost << 'EOF'
-            docker pull ${{ secrets.DOCKER_USERNAME }}/myflaskapp:latest
-            docker-compose down
-            docker-compose up -d
-          EOF
+  
