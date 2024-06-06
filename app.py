@@ -1,7 +1,7 @@
 from flask import Flask
 import random
 import time
-#sami
+#Sami
 app = Flask(__name__)
 
 def generate_random_number():
