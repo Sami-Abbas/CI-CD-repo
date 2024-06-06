@@ -61,7 +61,7 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         run: |
-          ssh -o StrictHostKeyChecking=no user@your_server_ip << 'EOF'
+          ssh -o StrictHostKeyChecking=no user@localhost << 'EOF'
             docker pull ${{ secrets.DOCKER_USERNAME }}/myflaskapp:latest
             docker-compose down
             docker-compose up -d
