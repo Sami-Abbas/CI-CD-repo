@@ -42,7 +42,24 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/myflaskapp:latest
         
-    - name: imma do my own thing
-      run: |
-        docker build -t myflaskapp
-        docker run -d -p 8081:5000 myflaskapp
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install SSH Key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no user@your_server_ip << 'EOF'
+            docker pull ${{ secrets.DOCKER_USERNAME }}/myflaskapp:latest
+            docker stop myflaskapp || true
+            docker rm myflaskapp || true
+            docker run -d --name myflaskapp -p 5000:5000 -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/myflaskapp:latest
+          EOF
