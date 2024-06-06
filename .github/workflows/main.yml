@@ -42,3 +42,7 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/myflaskapp:latest
         
+    - name: imma do my own thing
+      run: |
+        docker build -t myflaskapp
+        docker run -d -p 8081:5000 myflaskapp
